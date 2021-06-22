@@ -8,12 +8,13 @@ const Shop = () => {
     // const first10 = fakeData.slice(0,10);
     const [products,setProducts]=useState([]);
     const [cart,setCart] = useState([]);
+    const [search,setSearch] = useState('');
 
     useEffect(() => {
-        fetch('https://safe-woodland-31836.herokuapp.com/products')
+        fetch('https://safe-woodland-31836.herokuapp.com/products?search='+search)
         .then((response) =>response.json())
         .then(data =>setProducts(data))
-    },[])
+    },[search])
 
     useEffect(()=>{
         const savedCart= getDatabaseCart();
@@ -28,6 +29,11 @@ const Shop = () => {
         .then(res => res.json())
         .then(data => setCart(data))
     },[]);
+
+    // handle search
+    const handleSearch = (event) => {
+        setSearch(event.target.value);
+    }
    
     const handleAddProduct = (product) =>{
         const toBeAddedKey = product.key;
@@ -50,7 +56,7 @@ const Shop = () => {
     return ( 
         <div className='twin-container'>
             <div className="product-container">
-
+                <input onBlur={handleSearch} type="text" placeholder='Search' className="product-search" />
               {
                   products.map(product => 
                   <Products key={product.key} showAddToCart={true} handleAddProduct={handleAddProduct} product={product}>
